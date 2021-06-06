@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -30,34 +28,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setStateVariables(){
-        textView = (TextView) findViewById(R.id.textView);
-        button = (Button) findViewById(R.id.button);
+        textView = findViewById(R.id.textView);
+        button = findViewById(R.id.button);
         button.setOnClickListener(v -> {
             textView.append(".");
 
-            //getWebcontent();
+//            getWebContent();
 
             // compare both the following functions, first one will hang UI second one will not
-            // timeTakingFunc();
-             asyncTimeTakingFunc();
+//            timeTakingFunc();
+             timeTakingFuncWithAsync();
         });
     }
 
-    String line = new String();
-    private void getWebcontent(){
+    String line = "";
+    private void getWebContent(){
         try {
             URL url = new URL("https://api.timezonedb.com/v2.1/get-time-zone?key=3ZN5USVAZ546&format=xml&by=zone&zone=Asia/Karachi");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
-            String content = new String();
+            String content = "";
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
             while(true){
                 line = reader.readLine();
                 if(line == null)
                     break;
-                content += line;
+                content = content.concat(line);
             }
             line = content;
             Log.i("TAG", content);
@@ -74,11 +72,12 @@ public class MainActivity extends AppCompatActivity {
             i++;
         textView.append(" " + i);
     }
-    private void asyncTimeTakingFunc(){
+    private void timeTakingFuncWithAsync(){
+        getWebContent();
         AsyncTask<Integer,Integer,Integer> task = new AsyncTask<Integer,Integer,Integer>(){
             protected Integer doInBackground(Integer... params){
                 // do task
-                getWebcontent();
+//                getWebContent();
 //                for(int j=0;j<10000000;j++)
                     i++;
                 return i;
