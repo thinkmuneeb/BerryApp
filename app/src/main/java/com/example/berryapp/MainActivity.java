@@ -27,6 +27,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setStateVariables();
+        updateUIEverySec();
+    }
+
+    private void updateUIEverySec(){
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!this.isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(() -> {
+                            // update TextView here!
+                            textView.append(",");
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Log.i("TAG",e.getMessage());
+                }
+            }
+        };
+
+        thread.start();
     }
 
     private void setStateVariables(){
